@@ -336,7 +336,7 @@ def main():
 
 def detect_person_hand():
     yolo_v7()
-
+    # yolo_v8
 
 if __name__ == '__main__':
     # # initialization for yolo v7

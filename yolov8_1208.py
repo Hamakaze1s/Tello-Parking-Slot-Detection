@@ -93,5 +93,5 @@ def yolo_v8():
     detect(opt)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     yolo_v8()
