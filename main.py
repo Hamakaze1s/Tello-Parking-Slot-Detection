@@ -225,133 +225,140 @@ def main():
         while 1:
             # loop with pygame.event.get() is too much tight w/o some sleep
             time.sleep(0.01)
-            for e in pygame.event.get():
-                # print(e)
-                if e.type == pygame.locals.JOYAXISMOTION:
-                    continue
+            if is_joystick:
+                for e in pygame.event.get():
+                    # print(e)
+                    if e.key == pygame.K_q:
+                        print("Exiting program...")
+                        raise KeyboardInterrupt  # 模拟键盘中断，用于退出程序
 
-                elif e.type == pygame.locals.JOYHATMOTION:
-                    if e.value[0] < 0:
-                        drone.counter_clockwise(speed)
-                    if e.value[0] == 0:
-                        drone.clockwise(0)
-                    if e.value[0] > 0:
-                        drone.clockwise(speed)
-                    if e.value[1] < 0:
-                        drone.down(speed)
-                    if e.value[1] == 0:
-                        drone.up(0)
-                    if e.value[1] > 0:
-                        drone.up(speed)
-                elif e.type == pygame.locals.JOYBUTTONDOWN:
-                    if e.button == buttons.TAKEOFF:
-                        drone.takeoff()
-                        print('tello')
-                        speak.Speak('Taking Off')
+                    if e.type == pygame.locals.JOYAXISMOTION:
+                        continue
 
-                        # tello.takeoff()
-                    if e.button == buttons.LAND:
-                        drone.land()
-                        speak.Speak('Landing')
+                    elif e.type == pygame.locals.JOYHATMOTION:
+                        if e.value[0] < 0:
+                            drone.counter_clockwise(speed)
+                        if e.value[0] == 0:
+                            drone.clockwise(0)
+                        if e.value[0] > 0:
+                            drone.clockwise(speed)
+                        if e.value[1] < 0:
+                            drone.down(speed)
+                        if e.value[1] == 0:
+                            drone.up(0)
+                        if e.value[1] > 0:
+                            drone.up(speed)
+                    elif e.type == pygame.locals.JOYBUTTONDOWN:
+                        if e.button == buttons.TAKEOFF:
+                            drone.takeoff()
+                            print('tello')
+                            speak.Speak('Taking Off')
 
-                    elif e.button == buttons.UP:
-                        drone.up(speed)
-                    elif e.button == buttons.DOWN:
-                        drone.down(speed)
-                    elif e.button == buttons.ROTATE_RIGHT:
-                        drone.clockwise(speed)
-                    elif e.button == buttons.ROTATE_LEFT:
-                        drone.counter_clockwise(speed)
-                    elif e.button == buttons.FORWARD:
-                        drone.forward(speed)
-                    elif e.button == buttons.BACKWARD:
-                        drone.backward(speed)
-                    elif e.button == buttons.RIGHT:
-                        drone.right(speed)
-                        # speak.Speak('Training Mode')
-                        # print('training mode')
-                        # #drone.right(speed)
-                        # with open(r"C:\Users\litao\Desktop\tao_tello_face\src\mode.txt", "w") as text_file:
-                        #     print(f"tm", file=text_file)
+                            # tello.takeoff()
+                        if e.button == buttons.LAND:
+                            drone.land()
+                            speak.Speak('Landing')
 
-                    elif e.button == buttons.LEFT:
-                        drone.left(speed)
-                        # speak.Speak('Recognition Mode')
-                        # print('recognition mode')
-                        # with open(r"C:\Users\litao\Desktop\tao_tello_face\src\mode.txt", "w") as text_file:
-                        #     print(f"rm", file=text_file)
-                        # #drone.left(speed)
-                    elif e.button == buttons.FLIPR:
-                        drone.flip_right()
-                        # pyautogui.press('enter')
+                        elif e.button == buttons.UP:
+                            drone.up(speed)
+                        elif e.button == buttons.DOWN:
+                            drone.down(speed)
+                        elif e.button == buttons.ROTATE_RIGHT:
+                            drone.clockwise(speed)
+                        elif e.button == buttons.ROTATE_LEFT:
+                            drone.counter_clockwise(speed)
+                        elif e.button == buttons.FORWARD:
+                            drone.forward(speed)
+                        elif e.button == buttons.BACKWARD:
+                            drone.backward(speed)
+                        elif e.button == buttons.RIGHT:
+                            drone.right(speed)
+                            # speak.Speak('Training Mode')
+                            # print('training mode')
+                            # #drone.right(speed)
+                            # with open(r"C:\Users\litao\Desktop\tao_tello_face\src\mode.txt", "w") as text_file:
+                            #     print(f"tm", file=text_file)
 
-                    elif e.button == buttons.TAKEPHOTO:
-                        pyautogui.press('s')
-                elif e.type == pygame.locals.JOYBUTTONUP:
+                        elif e.button == buttons.LEFT:
+                            drone.left(speed)
+                            # speak.Speak('Recognition Mode')
+                            # print('recognition mode')
+                            # with open(r"C:\Users\litao\Desktop\tao_tello_face\src\mode.txt", "w") as text_file:
+                            #     print(f"rm", file=text_file)
+                            # #drone.left(speed)
+                        elif e.button == buttons.FLIPR:
+                            drone.flip_right()
+                            # pyautogui.press('enter')
 
-                    print('ps4----')
-                    if e.button == buttons.TAKEOFF:
-                        drone.takeoff()
-                        speak.Speak('Taking Off')
-                    elif e.button == buttons.UP:
-                        drone.up(speed)
-                    elif e.button == buttons.DOWN:
-                        drone.down(speed)
-                    elif e.button == buttons.ROTATE_RIGHT:
-                        drone.clockwise(speed)
-                    elif e.button == buttons.ROTATE_LEFT:
-                        drone.counter_clockwise(speed)
-                    elif e.button == buttons.FORWARD:
-                        drone.forward(speed)
-                    elif e.button == buttons.BACKWARD:
-                        drone.backward(speed)
-                    elif e.button == buttons.RIGHT:
-                        drone.right(speed)
-                    elif e.button == buttons.LEFT:
-                        drone.left(speed)
-                    elif e.button == buttons.FLIPR:
-                        drone.flip_right(speed)
-                        # pyautogui.press('enter')
-                    elif e.button == buttons.TAKEPHOTO:
-                        speak.Speak('flying mode')
-                        pyautogui.press('s')
+                        elif e.button == buttons.TAKEPHOTO:
+                            pyautogui.press('s')
+                    elif e.type == pygame.locals.JOYBUTTONUP:
 
+                        print('ps4----')
+                        if e.button == buttons.TAKEOFF:
+                            drone.takeoff()
+                            speak.Speak('Taking Off')
+                        elif e.button == buttons.UP:
+                            drone.up(speed)
+                        elif e.button == buttons.DOWN:
+                            drone.down(speed)
+                        elif e.button == buttons.ROTATE_RIGHT:
+                            drone.clockwise(speed)
+                        elif e.button == buttons.ROTATE_LEFT:
+                            drone.counter_clockwise(speed)
+                        elif e.button == buttons.FORWARD:
+                            drone.forward(speed)
+                        elif e.button == buttons.BACKWARD:
+                            drone.backward(speed)
+                        elif e.button == buttons.RIGHT:
+                            drone.right(speed)
+                        elif e.button == buttons.LEFT:
+                            drone.left(speed)
+                        elif e.button == buttons.FLIPR:
+                            drone.flip_right()
+                            # pyautogui.press('enter')
+                        elif e.button == buttons.TAKEPHOTO:
+                            speak.Speak('flying mode')
+                            pyautogui.press('s')
 
     except KeyboardInterrupt as e:
-        print(e)
-    except Exception as e:
-        print(e)
+        print("Program interrupted by user:", e)
 
-    drone.quit()
-    exit(1)
+    except Exception as e:
+        print("Unexpected error:", e)
+
+    finally:
+        drone.quit()
+        print("Drone resources released.")
+        exit(0)
 
 def detect_person_hand():
     yolo_v7()
 
 
 if __name__ == '__main__':
-    # initialization for yolo v7
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='yolov7-tiny.pt', help='model.pt path(s)')
-    # parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
-    parser.add_argument('--source', type=str, default='0', help='source')  # file/folder, 0 for webcam
-    parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
-    parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
-    parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
-    parser.add_argument('--device', default='0', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--view-img', action='store_true', help='display results')
-    parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
-    parser.add_argument('--save-conf', action='store_true', help='save confidences in --save-txt labels')
-    parser.add_argument('--nosave', action='store_true', help='do not save images/videos')
-    parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
-    parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
-    parser.add_argument('--augment', action='store_true', help='augmented inference')
-    parser.add_argument('--update', action='store_true', help='update all models')
-    parser.add_argument('--project', default='runs/detect', help='save results to project/name')
-    parser.add_argument('--name', default='exp', help='save results to project/name')
-    parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
-    parser.add_argument('--no-trace', action='store_true', help='don`t trace model')
-    opt = parser.parse_args()
+    # # initialization for yolo v7
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--weights', nargs='+', type=str, default='yolov7-tiny.pt', help='model.pt path(s)')
+    # # parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
+    # parser.add_argument('--source', type=str, default='0', help='source')  # file/folder, 0 for webcam
+    # parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
+    # parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
+    # parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
+    # parser.add_argument('--device', default='0', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    # parser.add_argument('--view-img', action='store_true', help='display results')
+    # parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
+    # parser.add_argument('--save-conf', action='store_true', help='save confidences in --save-txt labels')
+    # parser.add_argument('--nosave', action='store_true', help='do not save images/videos')
+    # parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
+    # parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
+    # parser.add_argument('--augment', action='store_true', help='augmented inference')
+    # parser.add_argument('--update', action='store_true', help='update all models')
+    # parser.add_argument('--project', default='runs/detect', help='save results to project/name')
+    # parser.add_argument('--name', default='exp', help='save results to project/name')
+    # parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
+    # parser.add_argument('--no-trace', action='store_true', help='don`t trace model')
+    # opt = parser.parse_args()
 
     # parallel processing
     # process_display = threading.Thread(target=yolo_v7)
