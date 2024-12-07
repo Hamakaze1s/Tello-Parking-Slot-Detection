@@ -1,0 +1,17 @@
+numpy
+opencv-python
+pandas
+# Pillow
+PyAutoGUI
+# pynput
+tellopy
+pywin32
+# mediapipe
+pygame
+pyproj
+requests
+tqdm
+pyyaml
+matplotlib
+seaborn
+scipy
