@@ -81,7 +81,7 @@ def detect(opt):
                 os.remove(img_path)
 
 
-def main():
+def yolo_v8():
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', type=str, default='yolov8s.pt', help='Path to YOLOv8 model')
     parser.add_argument('--source', type=str, default='0', help='Source: webcam (0) or image directory')

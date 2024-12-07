@@ -17,6 +17,8 @@ import win32com.client as wincl
 
 speak = wincl.Dispatch("SAPI.SpVoice")
 
+from yolov8_1208 import *  # yolov8
+
 from yolov7_1207 import *  # detect person
 # from yolov7_0121 import *  # detect hands
 
