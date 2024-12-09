@@ -334,7 +334,7 @@ def main():
         print("Drone resources released.")
         exit(0)
 
-def detect_person_hand():
+def detect():
     yolo_v7()
     # yolo_v8
 
@@ -365,7 +365,7 @@ if __name__ == '__main__':
     # parallel processing
     # process_display = threading.Thread(target=yolo_v7)
     # process_display = threading.Thread(target=check_drone_img)  # for debug
-    process_display = threading.Thread(target=detect_person_hand)
+    process_display = threading.Thread(target=detect)
     process_joystick = threading.Thread(target=main)
 
     process_display.start()

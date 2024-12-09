@@ -18,72 +18,63 @@ def detect(opt):
     )
 
     # Set device
-    if device == 'auto':
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cuda' if device == 'auto' and torch.cuda.is_available() else 'cpu'
     print(f"Using device: {device}")
 
     # Load YOLOv8 model
     model = YOLO(weights)
 
-    # Check if input is a webcam or image directory
-    webcam = source.isnumeric()
-    
-    print("Starting detection")
+    # Enable half precision if CUDA is available
+    if device == 'cuda':
+        model.model.half()  # Convert model to FP16
 
     # Main loop
+    print("Starting detection...")
+    path = 'data/test'
     while True:
-        pyautogui.press('s')
-        path = os.getcwd()
-        filelist = os.listdir(path)
+        if __name__ != "__main__":
+            pyautogui.press('s')
+            path = os.getcwd()
+        filelist = [f for f in os.listdir(path) if f.endswith((".png", ".jpg"))]
 
         for image in filelist:
-            if image.endswith(".png"):
-                source = image
+            img_path = os.path.join(path, image)
 
-                # Load image
-                img_path = os.path.join(path, source)
-                img = cv2.imread(img_path)
+            # Perform inference
+            results = model.predict(source=img_path, conf=conf_thres, iou=iou_thres, device=device)
 
-                # Move image to GPU if available
-                img_tensor = torch.from_numpy(img).float().to(device)
-                img_tensor /= 255.0  # Normalize image
-                if img_tensor.ndimension() == 3:
-                    img_tensor = img_tensor.unsqueeze(0)
+            # Process results
+            img = cv2.imread(img_path)
+            for result in results:
+                for box in result.boxes:
+                    xyxy = box.xyxy.cpu().numpy().flatten()  # 将二维数组展平为一维数组
+                    x1, y1, x2, y2 = map(int, xyxy[:4])  # 确保只取前4个值
 
-                # Enable half precision if CUDA is available
-                if device == 'cuda' and torch.cuda.is_available():
-                    model.model.half()  # Convert model to FP16
-                    img_tensor = img_tensor.half()
+                    conf = box.conf.cpu().numpy().item()
+                    cls = box.cls.cpu().numpy().item()
 
-                # Perform inference
-                results = model.predict(img_tensor, conf=conf_thres, iou=iou_thres, device=device, show=True)
+                    print(f"Detected {model.names[int(cls)]} with confidence {conf:.2f}")
 
-                # Process results
-                for result in results:
-                    for box in result.boxes:
-                        xyxy = box.xyxy.cpu().numpy()
-                        conf = box.conf.cpu().numpy()
-                        cls = box.cls.cpu().numpy()
+                    # Draw bounding box
+                    label = f"{model.names[int(cls)]} {conf:.2f}"
+                    if model.names[int(cls)] != "empty":
+                        continue
+                    # x1, y1, x2, y2 = map(int, xyxy)
+                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.putText(img, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-                        print(f"Detected {model.names[int(cls)]} with confidence {conf:.2f}")
-
-                        # Draw bounding box
-                        label = f"{model.names[int(cls)]} {conf:.2f}"
-                        x1, y1, x2, y2 = map(int, xyxy)
-                        cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                        cv2.putText(img, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-                # Display image
-                cv2.imshow("YOLOv8 Detection", img)
-                cv2.waitKey(1)
-
+            # Display image
+            cv2.imshow("YOLOv8 Detection", img)
+            cv2.waitKey(10)
+            if __name__ != "__main__":
                 # Remove processed image
                 os.remove(img_path)
 
 
+
 def yolo_v8():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', type=str, default='yolov8s.pt', help='Path to YOLOv8 model')
+    parser.add_argument('--weights', type=str, default='yolov8s_1208.pt', help='Path to YOLOv8 model')
     parser.add_argument('--source', type=str, default='0', help='Source: webcam (0) or image directory')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='Object confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='IoU threshold for NMS')
@@ -93,5 +84,5 @@ def yolo_v8():
     detect(opt)
 
 
-# if __name__ == '__main__':
-#     yolo_v8()
+if __name__ == '__main__':
+    yolo_v8()
